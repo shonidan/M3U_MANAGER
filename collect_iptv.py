@@ -2,9 +2,43 @@
 import os
 #import pdb 
 import glob
+import pathlib
 import requests
 
-os.makedirs("temp/")
+#Generate necessary files.
+
+tempfile_temp = pathlib.Path("temp/")
+tempfile_m3u = pathlib.Path("m3u/")
+tempfile_url_list = pathlib.Path("url_list.txt")
+
+if tempfile_temp.exists ():
+    pass
+else:
+    os.makedirs("temp/")
+
+if tempfile_m3u.exists ():
+    pass
+else:
+    os.makedirs("m3u/")
+
+if tempfile_url_list.exists ():
+    pass
+else:
+    os.system("echo 'https://pastebin.com/raw/HV5LwnLb' >> url_list.txt")
+
+
+#Clean duplicates url in url_list.txt
+
+lines_seen = set() # holds lines already seen
+with open("url_list2.txt", "w") as output_file:
+	for each_line in open("url_list.txt", "r"):
+	    if each_line not in lines_seen: # check if line is not duplicate
+	        output_file.write(each_line)
+	        lines_seen.add(each_line)
+old_list = "url_list2.txt"
+new_list = "url_list.txt"
+os.remove("url_list.txt")
+os.rename(old_list, new_list)
 
 #Reading the url's into "url_list.txt"
 with open("url_list.txt", 'r') as f:
@@ -14,11 +48,12 @@ with open("url_list.txt", 'r') as f:
         if '.m3u' in line:
             os.system(f'wget -N -P m3u/ {line}')
         elif '.m3u8' in line:
-            os.system(f'wget -N -P m3u/ {line}')   
+            os.system(f'wget -N -P m3u/ {line}')
         else:
             m3url = m3u.text
             with open("temp/temp.txt", 'a') as outfile:
                 outfile.write(m3url)
+                outfile.write("\n")
 
 
 #Reading m3u files.
@@ -44,15 +79,29 @@ url_ok_1 = open("temp/temp.txt").read()
 with open("Final_List.txt", 'a') as file:
     file.write(url_ok_1)
 
+
 #Delete files into folder "temp_m3u"
+
 tempath = 'temp/*'
 r = glob.glob(tempath)
 for i in r:
    os.remove(i)
+   #pass
+
+
+#Clean duplicates in final list
+
+lines_seen = set() # holds lines already seen
+with open("Final_List2.txt", "w") as output_file:
+	for each_line in open("Final_List.txt", "r"):
+	    if each_line not in lines_seen: # check if line is not duplicate
+	        output_file.write(each_line)
+	        lines_seen.add(each_line)
+
 
 #Rename final file
-
-old_file_name = "Final_List.txt"
+old_file_name = "Final_List2.txt"
 new_file_name = "Final_List.m3u"
+os.remove("Final_List.txt")
 
 os.rename(old_file_name, new_file_name)
