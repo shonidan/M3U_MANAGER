@@ -4,6 +4,8 @@ import os
 import glob
 import requests
 
+os.makedirs("temp/")
+
 #Reading the url's into "url_list.txt"
 with open("url_list.txt", 'r') as f:
     for line in f:
