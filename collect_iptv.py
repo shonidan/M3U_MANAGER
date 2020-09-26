@@ -106,11 +106,11 @@ with open("Final_List2.txt", "w") as output_file:
 
 # Rename final file
 old_file_name = "Final_List2.txt"
-new_file_name = "complete_List.m3u"
+new_file_name = "complete_list.m3u"
 os.remove("Final_List.txt")
 
 os.rename(old_file_name, new_file_name)
 
 os.system(f'./iptv-check {new_file_name}')
 
-os.remove("complete_List.m3u")
+os.remove("complete_list.m3u")
