@@ -51,9 +51,7 @@ with open("url_list.txt", 'r') as f:
             os.system(f'wget -N -P m3u/ {line}')
         elif '.m3u8' in line:
             os.system(f'wget -N -P m3u/ {line}')
-        elif m3u.status_code != 200:
-            line.strip()
-            print("Borrado url desactiva")   
+            
         else:
             m3url = m3u.text
             with open("temp/temp.txt", 'a') as outfile:
