@@ -20,6 +20,9 @@ def merge_m3u_to_json(directory=None):
     merged_channels = {}
     urls_seen = set()
 
+    # Extensiones a ignorar
+    ignored_extensions = ['.mp4', '.avi', '.mov', '.wmv', '.mkv', '.flv', '.mpg', '.mpeg', '.m4v', '.rm', '.rmvb', '.3gp']
+
     for filename in os.listdir(directory):
         if filename.lower().endswith('.m3u'):  # Ignorar el caso de la extensión del archivo
             m3u_file = os.path.join(directory, filename)
@@ -55,21 +58,20 @@ def merge_m3u_to_json(directory=None):
                 # Replace #EXTINF:-1 with #EXTINF:
                 info = tupla[0].replace("#EXTINF:-1", "#EXTINF:")
 
-                # Check if .mp3 is present in tupla[0], if so, skip it
-                if '.mp3' not in tupla[0].lower():
-                    # Check if the URL contains .mp4, if so, skip it
-                    if not any(extension.lower() in tupla[1].lower() for extension in ['.mp4', '.mp3']):
-                        # Check if the group already exists in the dictionary
-                        if group_key in channels_dict:
-                            channels_dict[group_key].append({
-                                'info': info,
-                                'url': tupla[1]
-                            })
-                        else:
-                            channels_dict[group_key] = [{
-                                'info': info,
-                                'url': tupla[1]
-                            }]
+                # Check if any ignored extension is present in tupla[0] or tupla[1], if so, skip it
+                if not any(extension.lower() in tupla[0].lower() or extension.lower() in tupla[1].lower()
+                           for extension in ignored_extensions):
+                    # Check if the group already exists in the dictionary
+                    if group_key in channels_dict:
+                        channels_dict[group_key].append({
+                            'info': info,
+                            'url': tupla[1]
+                        })
+                    else:
+                        channels_dict[group_key] = [{
+                            'info': info,
+                            'url': tupla[1]
+                        }]
 
             merged_channels.update(channels_dict)
 
