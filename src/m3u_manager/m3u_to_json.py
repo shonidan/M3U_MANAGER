@@ -18,9 +18,10 @@ def merge_m3u_to_json(directory=None):
         directory = os.getcwd()  # Usa el directorio actual si no se proporciona ninguno
 
     merged_channels = {}
+    urls_seen = set()
 
     for filename in os.listdir(directory):
-        if filename.endswith('.m3u'):
+        if filename.lower().endswith('.m3u'):  # Ignorar el caso de la extensión del archivo
             m3u_file = os.path.join(directory, filename)
             m3u_name = os.path.splitext(filename)[0]
             m3u_list = []
@@ -29,7 +30,9 @@ def merge_m3u_to_json(directory=None):
                 for line in m3u:
                     if line.startswith('#EXTINF'):
                         url = next(m3u).strip()  # Next line is the URL
-                        m3u_list.append((line.strip(), url))
+                        if url not in urls_seen:  # Verificar si la URL ya ha sido vista
+                            urls_seen.add(url)  # Agregar la URL al conjunto de URLs vistas
+                            m3u_list.append((line.strip(), url))
 
             channels_dict = {}
 
@@ -52,17 +55,21 @@ def merge_m3u_to_json(directory=None):
                 # Replace #EXTINF:-1 with #EXTINF:
                 info = tupla[0].replace("#EXTINF:-1", "#EXTINF:")
 
-                # Check if the group already exists in the dictionary
-                if group_key in channels_dict:
-                    channels_dict[group_key].append({
-                        'info': info,
-                        'url': tupla[1]
-                    })
-                else:
-                    channels_dict[group_key] = [{
-                        'info': info,
-                        'url': tupla[1]
-                    }]
+                # Check if .mp3 is present in tupla[0], if so, skip it
+                if '.mp3' not in tupla[0].lower():
+                    # Check if the URL contains .mp4, if so, skip it
+                    if not any(extension.lower() in tupla[1].lower() for extension in ['.mp4', '.mp3']):
+                        # Check if the group already exists in the dictionary
+                        if group_key in channels_dict:
+                            channels_dict[group_key].append({
+                                'info': info,
+                                'url': tupla[1]
+                            })
+                        else:
+                            channels_dict[group_key] = [{
+                                'info': info,
+                                'url': tupla[1]
+                            }]
 
             merged_channels.update(channels_dict)
 
@@ -70,5 +77,5 @@ def merge_m3u_to_json(directory=None):
 
     # Eliminar archivos .m3u
     for filename in os.listdir(directory):
-        if filename.endswith('.m3u'):
+        if filename.lower().endswith('.m3u'):  # Modificado para ignorar el caso de la extensión
             os.remove(os.path.join(directory, filename))

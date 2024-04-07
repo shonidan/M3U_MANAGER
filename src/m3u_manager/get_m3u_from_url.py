@@ -1,7 +1,6 @@
 import requests
 import logging
 
-
 def get_m3u_from_url(url):
     try:
         # New code added
@@ -11,8 +10,12 @@ def get_m3u_from_url(url):
                 logging.info("URL Available")
             else:
                 logging.info(f"{url} is not reachable (Status Code: {response.status_code}).")
+                with open("error_urls.txt", "a") as f:
+                    f.write(f"{url} (Status Code: {response.status_code})\n")
         except requests.ConnectionError:
             print(f"{url} is not reachable.")
+            with open("error_urls.txt", "a") as f:
+                f.write(f"{url} (Connection Error)\n")
         # End of new code
 
         response = requests.get(url)
