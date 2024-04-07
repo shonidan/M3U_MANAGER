@@ -1,5 +1,4 @@
-# Collector of m3u list
+# M3U MANAGER
 
-- In this stage, the files m3u and url's (iptv) are put into one file ".m3u".
-- Then the final file is scanned with iptv-check. 
-Credits peterpt (https://github.com/peterpt/IPTV-CHECK)
+- Put your m3u link in src/utils/URLS.json
+- Run the script :)
