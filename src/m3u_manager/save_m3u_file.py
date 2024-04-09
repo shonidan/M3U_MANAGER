@@ -6,7 +6,7 @@ def extract_values(channel_name, metadata_dict):
     keys = list(metadata_dict.keys())
 
     # Split the channel_name into lines
-    lines = [line + '_' for line in channel_name.strip().split('\n')]  # Agregar guion bajo al final de cada línea
+    lines = [line + '_' for line in channel_name.strip().split('\n')]
 
     for key in keys:
         for line in lines:
@@ -16,15 +16,15 @@ def extract_values(channel_name, metadata_dict):
                 start_index = key_index + len(key) + 2
 
                 # Find the end of value (next underscore)
-                end_index = line.find('_', start_index)  # Cambiar '"' por '_'
+                end_index = line.find('_', start_index)
 
                 # Check if it's group-title key or tvg-logo key
                 if key in ['group-title', 'tvg-logo']:
                     # If it's group-title or tvg-logo, find the end of value until the second underscore
-                    end_index = line.find('_', end_index + 1)  # Cambiar '"' por '_'
+                    end_index = line.find('_', end_index + 1)
 
                 # Adjust end_index to exclude the last underscore
-                adjusted_end_index = end_index if line[end_index - 1] != '_' else end_index - 1  # Cambiar '"' por '_'
+                adjusted_end_index = end_index if line[end_index - 1] != '_' else end_index - 1
 
                 # Extract value
                 value = line[start_index:adjusted_end_index].strip('"')
