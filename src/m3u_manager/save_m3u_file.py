@@ -3,41 +3,22 @@ from src.utils.metadata_m3u import dict_m3u
 
 def extract_values(channel_name, metadata_dict):
     parsed_values = {}
-    keys = list(metadata_dict.keys())
 
-    # Split the channel_name into lines
-    lines = [line + '_' for line in channel_name.strip().split('\n')]
+    # Iterate over each key in the metadata dictionary
+    for key, value in metadata_dict.items():
+        # Find the start and end positions of the key in the channel_name
+        start_index = channel_name.find(f'{key}="')
+        if start_index != -1:
+            start_index += len(key) + 2  # Move to the character after the key's opening quotes
+            end_index = channel_name.find('"', start_index)  # Find the closing quotes
 
-    for key in keys:
-        for line in lines:
-            key_index = line.find(f'{key}="')
-            if key_index != -1:
-                # Start search after key
-                start_index = key_index + len(key) + 2
+            # Extract the content between the quotes
+            extracted_value = channel_name[start_index:end_index]
 
-                # Find the end of value (next underscore)
-                end_index = line.find('_', start_index)
+            # Update parsed values
+            parsed_values[key] = extracted_value
 
-                # Check if it's group-title key or tvg-logo key
-                if key in ['group-title', 'tvg-logo']:
-                    # If it's group-title or tvg-logo, find the end of value until the second underscore
-                    end_index = line.find('_', end_index + 1)
-
-                # Adjust end_index to exclude the last underscore
-                adjusted_end_index = end_index if line[end_index - 1] != '_' else end_index - 1
-
-                # Extract value
-                value = line[start_index:adjusted_end_index].strip('"')
-
-                # Convert group-title value to uppercase
-                if key == 'group-title':
-                    value = value.upper()
-
-                # Update parsed values
-                parsed_values[key] = value
-                break
-
-    return {k: v for k, v in parsed_values.items() if k in metadata_dict}
+    return parsed_values
 
 
 def save_file_in_m3u(ext_inf, url_name):
