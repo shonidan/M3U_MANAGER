@@ -6,7 +6,7 @@ def extract_values(channel_name, metadata_dict):
     keys = list(metadata_dict.keys())
 
     # Split the channel_name into lines
-    lines = channel_name.strip().split('\n')
+    lines = [line + '"' for line in channel_name.strip().split('\n')]
 
     for key in keys:
         for line in lines:
