@@ -55,6 +55,10 @@ def merge_m3u_to_json(directory=None):
                     # If group-title is found, use it as the grouping key
                     group_key = key_value
 
+                    # Convertir el nombre del grupo a mayúsculas, excepto la URL
+                    if group_key != 'URL':
+                        group_key = group_key.upper()
+
                 # Replace #EXTINF:-1 with #EXTINF:
                 info = tupla[0].replace("#EXTINF:-1", "#EXTINF:")
 
