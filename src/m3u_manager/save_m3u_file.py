@@ -18,9 +18,9 @@ def extract_values(channel_name, metadata_dict):
                 # Find the end of value (next double quote)
                 end_index = line.find('"', start_index)
 
-                # Check if it's group-title key
-                if key == 'group-title':
-                    # If it's group-title, find the end of value until the second double quote
+                # Check if it's group-title key or tvg-logo key
+                if key in ['group-title', 'tvg-logo']:
+                    # If it's group-title or tvg-logo, find the end of value until the second double quote
                     end_index = line.find('"', end_index + 1)
 
                 # Extract value
@@ -35,6 +35,7 @@ def extract_values(channel_name, metadata_dict):
                 break
 
     return {k: v for k, v in parsed_values.items() if k in metadata_dict}
+
 
 
 def save_file_in_m3u(ext_inf, url_name):
