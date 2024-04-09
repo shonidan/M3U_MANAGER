@@ -9,31 +9,29 @@ def extract_values(channel_name, metadata_dict):
     lines = channel_name.strip().split('\n')
 
     for key in keys:
-        for line in reversed(lines):
+        for line in lines:
             key_index = line.find(f'{key}="')
             if key_index != -1:
                 # Start search after key
                 start_index = key_index + len(key) + 2
 
-                # Find the next occurrence of the next key or end of line
-                next_key = keys[keys.index(key) + 1] if key_index < len(keys) - 1 else None
-                next_key_index = len(line) if next_key is None else line.find(f'{next_key}="', start_index)
+                # Find the end of value (next double quote)
+                end_index = line.find('"', start_index)
 
-                # Extracting value between start_index and next_key_index
-                value = line[start_index:next_key_index].strip('"')
+                # Check if it's group-title key
+                if key == 'group-title':
+                    # If it's group-title, find the end of value until the second double quote
+                    end_index = line.find('"', end_index + 1)
 
-                # Check if this is the first key
-                if not parsed_values:
-                    parsed_values[key] = value
-                else:
-                    # Add key-value pair with comma separation
-                    if key in parsed_values:
-                        parsed_values[key] += f", {value}"
-                    else:
-                        parsed_values[key] = value
+                # Extract value
+                value = line[start_index:end_index].strip('"')
 
-                # Update lines to consider only the lines before this line
-                lines = lines[:lines.index(line)]
+                # Convert group-title value to uppercase
+                if key == 'group-title':
+                    value = value.upper()
+
+                # Update parsed values
+                parsed_values[key] = value
                 break
 
     return {k: v for k, v in parsed_values.items() if k in metadata_dict}
@@ -57,5 +55,7 @@ def save_file_in_m3u(ext_inf, url_name):
                 for key, value in parsed_values.items():
                     f.write(f"{key}=\"{value}\" ")
             else:
-                f.write(channel_name)  # If no keys are found, write the channel_name directly
+                f.write(channel_name.upper())  # Convert channel_name to uppercase
             f.write(f"\n{link}\n\n")
+
+
