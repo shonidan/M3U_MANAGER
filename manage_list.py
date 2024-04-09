@@ -6,6 +6,7 @@ from src.m3u_manager.m3u_to_json import merge_m3u_to_json
 from src.m3u_manager.remove_channels_from_json import remove_channels_from_json
 from src.m3u_manager.remove_duplicates_url import remove_duplicate_urls
 from src.m3u_manager.save_m3u_file import save_file_in_m3u
+from src.utils.metadata_m3u import topics_to_delete
 
 
 def get_all_m3u_from_url(url):
@@ -39,7 +40,7 @@ for url_name, url_value in urls.items():
 merge_m3u_to_json()
 
 # Step optional, delete NSFW content
-topics_to_delete = ['xxx', 'adult']
+topics_to_delete = topics_to_delete
 remove_channels_from_json("ALL_CHANNELS.json", topics_to_delete)
 
 # Step 5

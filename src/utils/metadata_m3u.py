@@ -10,6 +10,8 @@ dict_m3u = {
     "group-title": group_title
 }
 
+topics_to_delete = ['xxx', 'adult']
+
 equivalence_country_dict = {
     'Afganistán': 'Afghanistan',
     'Albania': 'Albania',

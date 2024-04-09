@@ -1,4 +1,5 @@
 import json
+import re
 
 
 def remove_channels_from_json(json_file, substrings):
@@ -14,7 +15,27 @@ def remove_channels_from_json(json_file, substrings):
         data = json.load(file)
 
     # Iterate over the dictionary keys
-    keys_to_remove = [key for key in data for substring in substrings if substring.lower() in key.lower()]
+    keys_to_remove = []
+
+    for key in data:
+        # Check if any of the substrings match the key
+        for substring in substrings:
+            if substring.lower() in key.lower():
+                keys_to_remove.append(key)
+                break  # No need to check further once a match is found
+
+        # Check if any of the channels within the group match the substrings
+        channels_to_remove = []
+
+        for channel in data[key]:
+            for substring in substrings:
+                if substring.lower() in channel['info'].lower() or substring.lower() in channel['url'].lower():
+                    channels_to_remove.append(channel)
+                    break  # No need to check further once a match is found
+
+        # Remove the channels from the group
+        for channel in channels_to_remove:
+            data[key].remove(channel)
 
     # Remove the keys and their associated channels
     for key in keys_to_remove:
