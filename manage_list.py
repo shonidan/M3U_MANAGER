@@ -25,7 +25,7 @@ def get_all_m3u_from_url(url):
     ext_inf = remove_duplicate_urls(m3u_list)
 
     # Step 3
-    save_file_in_m3u(ext_inf, f"{url_name}.m3u")  # Changed variable_name to url
+    save_file_in_m3u(ext_inf, f"{url_name}.m3u") # Changed variable_name to url
 
 
 # Cargar el archivo JSON
@@ -41,7 +41,7 @@ merge_m3u_to_json()
 
 # Step optional, delete NSFW content
 topics_to_delete = topics_to_delete
-remove_channels_from_json("ALL_CHANNELS.json", topics_to_delete)
+#remove_channels_from_json("ALL_CHANNELS.json", topics_to_delete)
 
 # Step 5
 list_key_names("ALL_CHANNELS.json")
