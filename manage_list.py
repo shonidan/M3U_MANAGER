@@ -1,4 +1,5 @@
 import json
+from src.m3u_manager.iptv_checker import teststream_json
 from src.m3u_manager.list_key_json import list_key_names
 from src.m3u_manager.get_m3u_from_url import get_m3u_from_url
 from src.m3u_manager.json_to_m3u import json_to_m3u
@@ -48,3 +49,6 @@ list_key_names("ALL_CHANNELS.json")
 
 # Step 6
 json_to_m3u("ALL_CHANNELS.json")
+
+# Optional. Activate this option to check available channels. This process may take a significant amount of time.
+teststream_json("ALL_CHANNELS.json")
