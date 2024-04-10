@@ -54,13 +54,13 @@ def save_file_in_m3u(ext_inf, url_name):
 
             # Write channel information
             if parsed_values:  # If parsed_values exist, write EXTINF with parsed values
-                extinf_values = ''.join([f'{key}={value}' if ' ' in value else f'{key}="{value}"' for key, value in parsed_values.items()])
+                extinf_values = ''.join(
+                    [
+                        f'{key}={value.upper()}' if key.lower() == 'group-title' else f'{key}={value}' if ' ' in value else f'{key}="{value}"'
+                        for key, value in parsed_values.items()])
                 f.write(f"#EXTINF:{extinf_values}\n")
-            else:  # If parsed_values do not exist, write channel_info as is
-                f.write(f"{channel_info}\n")
 
+            else:  # If parsed_values do not exist, write channel_info as is
+                f.write(f"{channel_info.upper()}\n")  # Convert channel_info to uppercase before writing
             # Write the link
             f.write(f"{link}\n\n")  # Add newline after each channel
-
-
-
