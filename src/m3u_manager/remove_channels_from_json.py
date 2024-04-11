@@ -1,46 +1,53 @@
 import json
 
 
-def remove_channels_from_json(json_file, substrings):
+def remove_channels_from_json(json_file, substrings, exceptions=None):
     """
-    Removes channels from the JSON file based on the specified substrings.
+    Removes channels from the JSON file based on the specified substrings and exceptions.
 
     Args:
         json_file (str): Path to the JSON file.
-        substrings (list): List of substrings to search for in group names.
+        substrings (list): List of substrings to search for in group names and channel info.
+        exceptions (list, optional): List of substrings to exclude from removal.
     """
-    # Open the JSON file and load its content into a dictionary
+    # Load the JSON data from the file
     with open(json_file, 'r', encoding='utf-8') as file:
         data = json.load(file)
 
-    # Iterate over the dictionary keys
+    # Initialize a list to track keys to remove
     keys_to_remove = []
 
+    # Iterate through the groups in the JSON data
     for key in data:
-        # Check if any of the substrings match the key
-        for substring in substrings:
-            if substring.lower() in key.lower():
-                keys_to_remove.append(key)
-                break  # No need to check further once a match is found
+        # Check if any substring matches the group name
+        if any(substring.lower() in key.lower() for substring in substrings):
+            keys_to_remove.append(key)
+            continue
 
-        # Check if any of the channels within the group match the substrings
+        # Initialize a list to track channels to remove within the group
         channels_to_remove = []
 
+        # Iterate through the channels in the current group
         for channel in data[key]:
-            for substring in substrings:
-                if substring.lower() in channel['info'].lower():
-                    channels_to_remove.append(channel)
-                    break  # No need to check further once a match is found
+            channel_info = channel['info'].lower()
 
-        # Remove the channels from the group
+            # Check if the channel should be excluded based on exceptions
+            if exceptions and any(exc.lower() in channel_info for exc in exceptions):
+                continue  # Skip this channel and proceed to the next one
+
+            # Check if any substring matches the channel info
+            if any(substring.lower() in channel_info for substring in substrings):
+                channels_to_remove.append(channel)
+
+        # Remove channels marked for removal from the group
         for channel in channels_to_remove:
             data[key].remove(channel)
 
-    # Remove the keys and their associated channels
+    # Remove groups marked for removal
     for key in keys_to_remove:
         del data[key]
 
-    # Write the updated dictionary back to the JSON file
+    # Write the updated data back to the JSON file
     with open(json_file, 'w', encoding='utf-8') as file:
         json.dump(data, file, ensure_ascii=False, indent=4)
 

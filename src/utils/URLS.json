@@ -1,3 +1,4 @@
 {
-    "local": "http://localhost:8000/ALL_CHANNELS.m3u"
+
+    "local": "http://localhost:8000/example.m3u"
 }

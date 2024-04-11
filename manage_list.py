@@ -42,7 +42,8 @@ merge_m3u_to_json()
 
 # Step optional, delete NSFW content
 topics_to_delete = topics_nsfw
-remove_channels_from_json("ALL_CHANNELS.json", topics_to_delete)
+ignore_similar_topics = ignore_similar_topics
+remove_channels_from_json("ALL_CHANNELS.json", topics_to_delete, ignore_similar_topics)
 
 # Step optional, keep only topics
 topics_to_keep = topics_nsfw

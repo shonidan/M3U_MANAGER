@@ -10,7 +10,8 @@ dict_m3u = {
     "group-title": group_title
 }
 
-topics_to_delete = ['\u274C\u274C\u274C', 'xxx', 'porn', 'adult', 'playboy', 'venus', 'ONLYFANS', ]
+ignore_similar_topics = ['adultswim', 'adult swim']
+topics_nsfw = ['\u274C\u274C\u274C', 'xxx', 'sextreme' 'sex xtreme dish', 'sexmex', 'porn', 'adult', 'playboy', 'venus', 'ONLYFANS', 'MOFOS', 'VISITX', 'BABES', 'BRAZZERS']
 
 equivalence_country_dict = {
     'Afganistán': 'Afghanistan',
