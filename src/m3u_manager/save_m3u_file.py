@@ -35,43 +35,32 @@ def extract_values(channel_info, metadata_dict):
     return parsed_values
 
 def save_file_in_m3u(ext_inf, url_name):
-    visited_links = set()  # Set para almacenar enlaces visitados
+    visited_links = set()  # Set to store visited links
 
     with open(url_name, 'w+') as f:
-        f.write("#EXTM3U\n\n")  # Escribir la etiqueta inicial
-
+        f.write("#EXTM3U\n\n")  # Removed url_name from #EXTM3U tag
         for channel_info, link in ext_inf:
-            # Verificar si el enlace ya se ha visitado
+            # Check if the link has been visited already
             if link in visited_links:
-                continue  # Si es un enlace duplicado, pasa al siguiente canal
+                continue  # If it's a duplicate link, move to the next channel
             else:
-                visited_links.add(link)  # Añadir el enlace al conjunto de enlaces visitados
+                visited_links.add(link)  # Add the link to the set of visited links
 
-            # Extraer valores analizados si están disponibles
+            # Extract parsed values if available
             parsed_values = {}
             if any(key in channel_info for key in dict_m3u.keys()):
                 channel_info_modified = add_symbol(channel_info)
                 parsed_values = extract_values(channel_info_modified, dict_m3u)
 
-                # Verificar si 'tvg-logo' existe y si su valor no empieza con 'http'
-                if 'tvg-logo' in parsed_values:
-                    tvg_logo_value = parsed_values['tvg-logo']
-                    if not tvg_logo_value.startswith('http'):
-                        # Si 'tvg-logo' no empieza con 'http', vaciar el valor entre comillas
-                        parsed_values['tvg-logo'] = ''
-
-            # Escribir la información del canal
-            if parsed_values:  # Si existen valores analizados, escribir EXTINF con los valores analizados
+            # Write channel information
+            if parsed_values:  # If parsed_values exist, write EXTINF with parsed values
                 extinf_values = ''.join(
                     [
-                        f'{key}={value}' if ' ' in value else f'{key}="{value}"'
-                        for key, value in parsed_values.items()
-                    ]
-                )
+                        f'{key}={value.upper()}' if key.lower() == 'group-title' else f'{key}={value}' if ' ' in value else f'{key}="{value}"'
+                        for key, value in parsed_values.items()])
                 f.write(f"#EXTINF:{extinf_values}\n")
 
-            else:  # Si no existen valores analizados, escribir channel_info tal como está
-                f.write(f"{channel_info.upper()}\n")  # Convertir channel_info a mayúsculas antes de escribir
-
-            # Escribir el enlace
-            f.write(f"{link}\n\n")  # Añadir nueva línea después de cada canal
+            else:  # If parsed_values do not exist, write channel_info as is
+                f.write(f"{channel_info.upper()}\n")  # Convert channel_info to uppercase before writing
+            # Write the link
+            f.write(f"{link}\n\n")  # Add newline after each channel
