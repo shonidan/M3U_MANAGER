@@ -4,10 +4,10 @@ from src.m3u_manager.list_key_json import list_key_names
 from src.m3u_manager.get_m3u_from_url import get_m3u_from_url
 from src.m3u_manager.json_to_m3u import json_to_m3u
 from src.m3u_manager.m3u_to_json import merge_m3u_to_json
-from src.m3u_manager.remove_channels_from_json import remove_channels_from_json
+from src.m3u_manager.remove_channels_from_json import remove_channels_from_json, keep_channels_with_substrings
 from src.m3u_manager.remove_duplicates_url import remove_duplicate_urls
 from src.m3u_manager.save_m3u_file import save_file_in_m3u
-from src.utils.metadata_m3u import topics_to_delete
+from src.utils.metadata_m3u import topics_nsfw, ignore_similar_topics
 
 
 def get_all_m3u_from_url(url):
@@ -26,7 +26,7 @@ def get_all_m3u_from_url(url):
     ext_inf = remove_duplicate_urls(m3u_list)
 
     # Step 3
-    save_file_in_m3u(ext_inf, f"{url_name}.m3u") # Changed variable_name to url
+    save_file_in_m3u(ext_inf, f"{url_name}.m3u")  # Changed variable_name to url
 
 
 # Cargar el archivo JSON
@@ -41,8 +41,12 @@ for url_name, url_value in urls.items():
 merge_m3u_to_json()
 
 # Step optional, delete NSFW content
-topics_to_delete = topics_to_delete
-#remove_channels_from_json("ALL_CHANNELS.json", topics_to_delete)
+topics_to_delete = topics_nsfw
+remove_channels_from_json("ALL_CHANNELS.json", topics_to_delete)
+
+# Step optional, keep only topics
+topics_to_keep = topics_nsfw
+# keep_channels_with_substrings("ALL_CHANNELS.json", topics_to_keep)
 
 # Step 5
 list_key_names("ALL_CHANNELS.json")
@@ -50,5 +54,5 @@ list_key_names("ALL_CHANNELS.json")
 # Step 6
 json_to_m3u("ALL_CHANNELS.json")
 
-# Optional. Activate this option to check available channels. This process may take a significant amount of time.
-teststream_json("ALL_CHANNELS.json")
+# Step 7: Optional. Activate this option to check available channels. This process may take a significant amount of time.
+# teststream_json("ALL_CHANNELS.json")
