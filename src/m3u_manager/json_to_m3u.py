@@ -17,7 +17,7 @@ def json_to_m3u(json_file):
                     # Find the index of #EXTINF: and insert group-title after it
                     extinf_index = info.find("#EXTINF:")
                     if extinf_index != -1:
-                        info = info[:extinf_index + len("#EXTINF:")] + f" group-title=\"{channel_group}\"" + info[extinf_index + len("#EXTINF:"):]
+                        info = info[:extinf_index + len("#EXTINF:")] + f" group-title=\"{channel_group}\" " + info[extinf_index + len("#EXTINF:"):]
                     else:
                         info = f"#EXTINF: group-title=\"{channel_group}\"" + info
 
