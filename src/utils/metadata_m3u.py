@@ -11,7 +11,7 @@ dict_m3u = {
 }
 
 ignore_similar_topics = ['adultswim', 'adult swim']
-topics_nsfw = ['\u274C\u274C\u274C', 'xxx', 'sextreme' 'sex xtreme dish', 'sexmex', 'porn', 'adult', 'playboy', 'venus', 'ONLYFANS', 'MOFOS', 'VISITX', 'BABES', 'BRAZZERS']
+topics_nsfw = ['\u274C\u274C\u274C', 'xxx', 'sextreme' 'SEX XTREME', 'sexmex', 'porn', 'adult', 'playboy', 'venus', 'ONLYFANS', 'MOFOS', 'VISITX', 'BABES', 'BRAZZERS']
 
 equivalence_country_dict = {
     'Afganistán': 'Afghanistan',

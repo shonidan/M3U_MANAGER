@@ -1,5 +1,6 @@
 from src.utils.metadata_m3u import dict_m3u
 
+
 def add_symbol(channel_info):
     # Agregar el símbolo ∭ antes de cada clave
     modified_info = ""
@@ -12,6 +13,7 @@ def add_symbol(channel_info):
     # Agregar el símbolo ∭ al final
     modified_info += " ∭"
     return modified_info.strip()
+
 
 def extract_values(channel_info, metadata_dict):
     parsed_values = {}
@@ -33,6 +35,7 @@ def extract_values(channel_info, metadata_dict):
                 parsed_values[key] = extracted_value
 
     return parsed_values
+
 
 def save_file_in_m3u(ext_inf, url_name):
     visited_links = set()  # Set to store visited links
@@ -61,6 +64,6 @@ def save_file_in_m3u(ext_inf, url_name):
                 f.write(f"#EXTINF:{extinf_values}\n")
 
             else:  # If parsed_values do not exist, write channel_info as is
-                f.write(f"{channel_info.upper()}\n")  # Convert channel_info to uppercase before writing
+                f.write(f"{channel_info}\n")  # Convert channel_info to uppercase before writing
             # Write the link
             f.write(f"{link}\n\n")  # Add newline after each channel
