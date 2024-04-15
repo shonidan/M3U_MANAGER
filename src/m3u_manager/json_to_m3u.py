@@ -3,10 +3,10 @@ import json
 
 def json_to_m3u(json_file):
     json_name = json_file.replace(".json", "")
-    with open(json_file, "r") as json_data:
+    with open(json_file, "r", encoding="utf-8") as json_data:
         data = json.load(json_data)
 
-    with open(f"{json_name}.m3u", "w") as f:
+    with open(f"{json_name}.m3u", "w", encoding="utf-8") as f:
         f.write("#EXTM3U\n\n")  # Write the m3u file header
         for channel_group, channels_info in data.items():
             # Convertir el nombre del grupo a mayúsculas
