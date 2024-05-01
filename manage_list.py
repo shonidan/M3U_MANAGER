@@ -9,6 +9,7 @@ from src.m3u_manager.remove_duplicates_url import remove_duplicate_urls
 from src.m3u_manager.save_m3u_file import save_file_in_m3u
 from src.utils.metadata_m3u import topics_nsfw, ignore_similar_topics
 
+
 def get_all_m3u_from_url(url):
     """
     Steps to manage one or more URLs:
@@ -27,7 +28,8 @@ def get_all_m3u_from_url(url):
     ext_inf = remove_duplicate_urls(m3u_list)
 
     # Step 3
-    save_file_in_m3u(ext_inf, f"{url}.m3u")  # Changed variable_name to url
+    save_file_in_m3u(ext_inf, f"{url_name}.m3u")  # Changed variable_name to url
+
 
 # Load the JSON file.
 with open('src/utils/URLS.json', 'r') as file:

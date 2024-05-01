@@ -45,7 +45,7 @@ def extract_values(channel_info, metadata_dict):
 def save_file_in_m3u(ext_inf, url_name):
     visited_links = set()  # Set to store visited links
 
-    with open(url_name, 'w+', encoding="utf-8") as f:
+    with open(url_name, 'w+', encoding='utf-8') as f:
         f.write("#EXTM3U\n\n")  # Removed url_name from #EXTM3U tag
         for channel_info, link in ext_inf:
             # Check if the link has been visited already
