@@ -2,15 +2,15 @@ from src.utils.metadata_m3u import dict_m3u
 
 
 def add_symbol(channel_info):
-    # Agregar el símbolo ∭ antes de cada clave
+    # Add the symbol ∭ before each key
     modified_info = ""
     for word in channel_info.split():
         if '=' in word:
-            key, value = word.split('=', 1)  # Dividir solo una vez
+            key, value = word.split('=', 1)  # Split only once
             modified_info += f" ∭{key}={value}"
         else:
             modified_info += f" {word}"
-    # Agregar el símbolo ∭ al final
+    # Add the symbol ∭ at the end
     modified_info += " ∭"
     return modified_info.strip()
 
@@ -18,20 +18,25 @@ def add_symbol(channel_info):
 def extract_values(channel_info, metadata_dict):
     parsed_values = {}
 
-    # Encuentra el índice de inicio de cada clave en el channel_info
+    # Find the start index of each key in the channel_info
     start_indexes = [channel_info.find(f'∭{key}=') for key in metadata_dict.keys()]
 
-    # Recorre cada índice de inicio
+    # Iterate through each start index
     for start_index, (key, value) in zip(start_indexes, metadata_dict.items()):
         if start_index != -1:
-            # Encuentra el índice de fin de cada clave
+            # Find the end index of each key
             end_index = channel_info.find("∭", start_index + 1)
             if end_index != -1:
-                # Extrae el contenido entre el símbolo = y ∭
-                start_value_index = start_index + len(key) + 2  # Índice después del símbolo =
+                # Extract the content between the = symbol and ∭
+                start_value_index = start_index + len(key) + 2  # Index after the = symbol
                 extracted_value = channel_info[start_value_index:end_index]
 
-                # Actualiza los valores extraídos
+                # If the key is "tvg-name", remove anything after the last quotation mark
+                if key == "tvg-name" and '"' in extracted_value:
+                    last_quote_index = extracted_value.rfind('"')
+                    extracted_value = extracted_value[:last_quote_index + 1]  # Keep the last quotation mark
+
+                # Update the extracted values
                 parsed_values[key] = extracted_value
 
     return parsed_values

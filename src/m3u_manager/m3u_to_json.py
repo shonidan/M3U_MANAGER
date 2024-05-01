@@ -2,6 +2,7 @@ import json
 import re
 import os
 
+
 def save_to_json(channels_dict, url_name):
     """
     Saves the dictionary of channels to a JSON file.
@@ -13,18 +14,20 @@ def save_to_json(channels_dict, url_name):
     with open(f'{url_name}.json', 'w', encoding='utf-8') as json_file:
         json.dump(channels_dict, json_file, ensure_ascii=False, indent=4, sort_keys=True)
 
+
 def merge_m3u_to_json(directory=None):
     if directory is None:
-        directory = os.getcwd()  # Usa el directorio actual si no se proporciona ninguno
+        directory = os.getcwd()  # Use current directory if none provided
 
     merged_channels = {}
     urls_seen = set()
 
-    # Extensiones a ignorar
-    ignored_extensions = ['.mp4', '.avi', '.mov', '.wmv', '.mkv', '.flv', '.mpg', '.mpeg', '.m4v', '.rm', '.rmvb', '.3gp']
+    # Extensions to ignore
+    ignored_extensions = ['.mp4', '.avi', '.mov', '.wmv', '.mkv', '.flv', '.mpg', '.mpeg', '.m4v', '.rm', '.rmvb',
+                          '.3gp']
 
     for filename in os.listdir(directory):
-        if filename.lower().endswith('.m3u'):  # Ignorar el caso de la extensión del archivo
+        if filename.lower().endswith('.m3u'):  # Ignore case of file extension
             m3u_file = os.path.join(directory, filename)
             m3u_name = os.path.splitext(filename)[0]
             m3u_list = []
@@ -33,8 +36,8 @@ def merge_m3u_to_json(directory=None):
                 for line in m3u:
                     if line.startswith('#EXTINF'):
                         url = next(m3u).strip()  # Next line is the URL
-                        if url not in urls_seen:  # Verificar si la URL ya ha sido vista
-                            urls_seen.add(url)  # Agregar la URL al conjunto de URLs vistas
+                        if url not in urls_seen:  # Check if URL has been seen before
+                            urls_seen.add(url)  # Add URL to seen URLs set
                             m3u_list.append((line.strip(), url))
 
             channels_dict = {}
@@ -55,7 +58,7 @@ def merge_m3u_to_json(directory=None):
                     # If group-title is found, use it as the grouping key
                     group_key = key_value
 
-                    # Convertir el nombre del grupo a mayúsculas, excepto la URL
+                    # Convert group name to uppercase, except for URL
                     if group_key != 'URL':
                         group_key = group_key.upper()
 
@@ -81,7 +84,7 @@ def merge_m3u_to_json(directory=None):
 
     save_to_json(merged_channels, 'ALL_CHANNELS')
 
-    # Eliminar archivos .m3u
+    # Remove .m3u files
     for filename in os.listdir(directory):
-        if filename.lower().endswith('.m3u'):  # Modificado para ignorar el caso de la extensión
+        if filename.lower().endswith('.m3u'):  # Modify to ignore case of extension
             os.remove(os.path.join(directory, filename))
