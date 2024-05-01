@@ -1,2 +1,5 @@
 __pycache__/
 src/utils/URLS.json
+*.json
+*.m3u
+error_urls.txt
