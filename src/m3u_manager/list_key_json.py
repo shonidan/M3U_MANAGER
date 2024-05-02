@@ -29,7 +29,7 @@ def list_key_names(json_file):
                                     print(f"The dictionary '{key_to_delete}' was not found.")
                             else:
                                 print(f"Invalid dictionary number: {number_to_delete}")
-                        with open(json_file, 'w') as f:
+                        with open(json_file, 'w', encoding='utf-8') as f:
                             json.dump(data, f, indent=4)
                     else:
                         print("No dictionaries selected for deletion.")

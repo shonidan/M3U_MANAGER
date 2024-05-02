@@ -47,7 +47,7 @@ def teststream(url):
 
 # Función para verificar las transmisiones en un archivo JSON
 def teststream_json(json_file):
-    with open(json_file) as f:
+    with open(json_file, encoding='utf-8') as f:
         data = json.load(f)
 
     # Iterar sobre cada grupo en el JSON
@@ -58,5 +58,5 @@ def teststream_json(json_file):
 
     # Guardar el JSON resultante
     output_file = os.path.splitext(json_file)[0] + '_output.json'
-    with open(output_file, 'w') as f:
+    with open(output_file, 'w', encoding='utf-8') as f:
         json.dump(data, f, indent=4)

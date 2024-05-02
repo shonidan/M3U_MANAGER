@@ -17,7 +17,7 @@ def fix_json(file_name):
                 data[new_group_name] = data.pop(group_name)
 
     # Leer el JSON desde el archivo
-    with open(file_name, 'r') as file:
+    with open(file_name, 'r', encoding='utf-8') as file:
         data = json.load(file)
 
     # Llamar a la función interna para arreglar los nombres de grupo
@@ -27,5 +27,5 @@ def fix_json(file_name):
     process_data(data)
 
     # Escribir el JSON actualizado de nuevo al archivo
-    with open('ALL_CHANNELS.json', 'w') as file:
+    with open('ALL_CHANNELS.json', 'w', encoding='utf-8') as file:
         json.dump(data, file, indent=4)

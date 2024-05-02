@@ -8,7 +8,7 @@ def replace_emojis_from_file(filename):
         # Agrega más emojis y sus representaciones de texto aquí si es necesario
     }
 
-    with open(filename, 'r') as file:
+    with open(filename, 'r', encoding='utf-8') as file:
         data = json.load(file)
 
     for group_key, channels in list(data.items()):
@@ -33,7 +33,7 @@ def replace_emojis_from_file(filename):
                         new_info += char
                 channel["info"] = new_info
 
-    with open(filename, 'w') as file:
+    with open(filename, 'w', encoding='utf-8') as file:
         json.dump(data, file, indent=4, ensure_ascii=False)
 
 
@@ -79,5 +79,7 @@ def remove_emojis(text):
                                u"\u231a"
                                u"\ufe0f"  # dingbats
                                u"\u3030"
+                               u"\u2013"
+                               u"\u2122"
                                "]+", flags=re.UNICODE)
     return emoji_pattern.sub(r'', text)

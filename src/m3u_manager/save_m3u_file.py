@@ -1,3 +1,4 @@
+import re
 from src.utils.metadata_m3u import dict_m3u
 
 
@@ -50,6 +51,15 @@ def save_file_in_m3u(ext_inf, url_name):
         for channel_info, link in ext_inf:
             # Convertir el nombre del grupo a mayúsculas
             channel_group_upper = url_name.upper().replace(".M3U", "")
+
+            # Replace #EXTINF:-1 with #EXTINF:
+            channel_info = channel_info.replace("#EXTINF:-1", "#EXTINF:")
+
+            # Agregar lógica para insertar group-title si no se encuentra en la información del canal
+            if "group-title" not in channel_info:
+                # Utilizando expresiones regulares para insertar group-title antes de #EXTINF:
+                channel_info = re.sub(r'#EXTINF:\s', f'#EXTINF: group-title="{channel_group_upper}" ', channel_info)
+
             # Verificar si el enlace ya ha sido visitado
             if link in visited_links:
                 continue  # If it's a duplicate link, move to the next channel
@@ -64,7 +74,7 @@ def save_file_in_m3u(ext_inf, url_name):
 
             # Agregar lógica para insertar group-title si no se encuentra en la información del canal
             if "group-title" not in channel_info:
-                channel_info = f"#EXTINF: group-title=\"{channel_group_upper}\"" + channel_info
+                channel_info = channel_info.replace(f"#EXTINF:", f"#EXTINF: group-title=\"{channel_group_upper}\" ")
 
             # Escribir información del canal
             if parsed_values:

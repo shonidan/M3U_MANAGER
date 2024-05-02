@@ -2,8 +2,6 @@ import json
 import re
 import os
 
-from src.utils.metadata_m3u import topics_nsfw
-
 
 def save_to_json(channels_dict, url_name):
     """
@@ -18,7 +16,6 @@ def save_to_json(channels_dict, url_name):
 
 
 def merge_m3u_to_json(directory=None):
-    topic_to_change = topics_nsfw
     if directory is None:
         directory = os.getcwd()  # Use current directory if none provided
 
@@ -53,9 +50,6 @@ def merge_m3u_to_json(directory=None):
                 match = re.search(group_title_pattern, tupla[0])
                 if match:
                     key_value = match.group(1).replace(' ', '_')
-
-                if key_value in topic_to_change:
-                    group_key = "ADULTS_XXX"
 
                 if key_value is None:
                     # If group-title is not found, use m3u_name as the grouping key
