@@ -2,10 +2,35 @@ import json
 import re
 
 
-def replace_emojis_from_file(filename):
+def replace_characters_from_file(filename):
     emoji_mapping = {
         "❌": "X",
-        # Agrega más emojis y sus representaciones de texto aquí si es necesario
+        "á": "a",
+        "é": "e",
+        "í": "i",
+        "ó": "o",
+        "ú": "u",
+        "ü": "u",
+        "Á": "A",
+        "É": "E",
+        "Í": "I",
+        "Ó": "O",
+        "Ú": "U",
+        "Ü": "U",
+        "©": "",
+        "Ã©":"E",
+        "Ã¨":"E",
+        "Ã¯":"I",
+        "˸ᴰ":"HD",
+        "₵":"",
+        "ᴴ":"H",
+        "ᴰ":"D",
+        "℗":"",
+        u"\u20e3":"",
+        "Ŧ":"I",
+        "¹":"Ñ",
+        "⁽":"(",
+        "⁾":")"
     }
 
     with open(filename, 'r', encoding='utf-8') as file:

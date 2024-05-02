@@ -63,7 +63,7 @@ def merge_m3u_to_json(directory=None):
                         group_key = group_key.upper()
 
                 # Replace #EXTINF:-1 with #EXTINF:
-                info = tupla[0].replace("#EXTINF:-1", "#EXTINF:")
+                info = tupla[0]
 
                 # Check if any ignored extension is present in tupla[0] or tupla[1], if so, skip it
                 if not any(extension.lower() in tupla[0].lower() or extension.lower() in tupla[1].lower()

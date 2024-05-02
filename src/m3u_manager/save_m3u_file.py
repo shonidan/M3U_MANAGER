@@ -70,8 +70,6 @@ def save_file_in_m3u(ext_inf, url_name):
                 channel_info_modified = add_symbol(channel_info)
                 parsed_values = extract_values(channel_info_modified, dict_m3u)
 
-
-
             # Escribir información del canal
             if parsed_values:
                 extinf_values = ''.join(

@@ -1,6 +1,6 @@
 import json
 
-from src.m3u_manager.emoji_manager import replace_emojis_from_file, remove_emojis_from_file
+from src.m3u_manager.emoji_manager import remove_emojis_from_file, replace_characters_from_file
 from src.m3u_manager.fix_json import fix_json
 from src.m3u_manager.iptv_checker import teststream_json
 from src.m3u_manager.list_key_json import list_key_names
@@ -46,7 +46,7 @@ for url_name, url_value in urls.items():
 merge_m3u_to_json()
 
 # Optional: emoji manager
-replace_emojis_from_file("ALL_CHANNELS.json")
+replace_characters_from_file("ALL_CHANNELS.json")
 remove_emojis_from_file("ALL_CHANNELS.json")
 fix_json("ALL_CHANNELS.json")
 
