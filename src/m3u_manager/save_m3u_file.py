@@ -48,7 +48,9 @@ def save_file_in_m3u(ext_inf, url_name):
     with open(url_name, 'w+', encoding='utf-8') as f:
         f.write("#EXTM3U\n\n")  # Removed url_name from #EXTM3U tag
         for channel_info, link in ext_inf:
-            # Check if the link has been visited already
+            # Convertir el nombre del grupo a mayúsculas
+            channel_group_upper = url_name.upper().replace(".M3U", "")
+            # Verificar si el enlace ya ha sido visitado
             if link in visited_links:
                 continue  # If it's a duplicate link, move to the next channel
             else:
@@ -60,8 +62,12 @@ def save_file_in_m3u(ext_inf, url_name):
                 channel_info_modified = add_symbol(channel_info)
                 parsed_values = extract_values(channel_info_modified, dict_m3u)
 
-            # Write channel information
-            if parsed_values:  # If parsed_values exist, write EXTINF with parsed values
+            # Agregar lógica para insertar group-title si no se encuentra en la información del canal
+            if "group-title" not in channel_info:
+                channel_info = f"#EXTINF: group-title=\"{channel_group_upper}\"" + channel_info
+
+            # Escribir información del canal
+            if parsed_values:
                 extinf_values = ''.join(
                     [
                         f'{key}={value.upper()}' if key.lower() == 'group-title' else f'{key}={value}' if ' ' in value else f'{key}="{value}"'
