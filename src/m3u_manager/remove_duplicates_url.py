@@ -1,4 +1,7 @@
 def remove_duplicate_urls(url_list):
+    if url_list is None:
+        return []
+
     seen_urls = set()
     unique_urls = []
 
