@@ -39,6 +39,20 @@ def fix_json(file_name):
                         'group-title=\"{}\"'.format(channel['info'].split('group-title="')[1].split('"')[0]),
                         'group-title=\"{}\"'.format(group_name))
 
+    def replace_specific_words(data, words_to_replace, replacement):
+        new_data = {}
+        for group_name, channels in data.items():
+            new_group_name = group_name
+            for word in words_to_replace:
+                if word.lower() in group_name.lower():
+                    new_group_name = replacement
+                    break  # Salir del bucle una vez que se ha encontrado una coincidencia
+            # Agregar el grupo original o el grupo modificado al nuevo diccionario
+            if new_group_name not in new_data:
+                new_data[new_group_name] = []
+            new_data[new_group_name].extend(channels)
+        return new_data
+
     # Leer el JSON desde el archivo
     with open(file_name, 'r', encoding='utf-8') as file:
         data = json.load(file)
@@ -47,6 +61,11 @@ def fix_json(file_name):
     modified_data = remove_special_characters_group_names(data)
     modified_data = remove_intermediate_characters(modified_data)
     modified_data = remove_extra_underscores(modified_data)
+
+    # Reemplazar palabras específicas en group_name
+    words_to_replace = ['XXX', 'ADULT']
+    replacement = 'ADULTS_XXX'
+    modified_data = replace_specific_words(modified_data, words_to_replace, replacement)
 
     # Actualizar el valor de group-title en los datos
     update_group_title(modified_data)
