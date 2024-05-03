@@ -37,11 +37,7 @@ def fix_json(file_name):
 
     # Modificar las claves del diccionario
     modified_data = remove_special_characters_group_names(data)
-
-    # Aplicar la función para eliminar caracteres intermedios no deseados
     modified_data = remove_intermediate_characters(modified_data)
-
-    # Aplicar la función para eliminar guiones bajos extras
     modified_data = remove_extra_underscores(modified_data)
 
     # Ordenar el diccionario por keys (group-title) alfabéticamente
