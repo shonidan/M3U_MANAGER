@@ -4,33 +4,7 @@ import re
 
 def replace_characters_from_file(filename):
     emoji_mapping = {
-        "❌": "X",
-        "á": "a",
-        "é": "e",
-        "í": "i",
-        "ó": "o",
-        "ú": "u",
-        "ü": "u",
-        "Á": "A",
-        "É": "E",
-        "Í": "I",
-        "Ó": "O",
-        "Ú": "U",
-        "Ü": "U",
-        "©": "",
-        "Ã©":"E",
-        "Ã¨":"E",
-        "Ã¯":"I",
-        "˸ᴰ":"HD",
-        "₵":"",
-        "ᴴ":"H",
-        "ᴰ":"D",
-        "℗":"",
-        u"\u20e3":"",
-        "Ŧ":"I",
-        "¹":"Ñ",
-        "⁽":"(",
-        "⁾":")"
+        "❌": "X"
     }
 
     with open(filename, 'r', encoding='utf-8') as file:
