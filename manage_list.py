@@ -48,6 +48,8 @@ merge_m3u_to_json()
 # Optional: emoji manager
 replace_characters_from_file("ALL_CHANNELS.json")
 remove_emojis_from_file("ALL_CHANNELS.json")
+
+# Necessary function to fix JSON formatting and group names
 fix_json("ALL_CHANNELS.json")
 
 # Step optional: Delete NSFW content.
