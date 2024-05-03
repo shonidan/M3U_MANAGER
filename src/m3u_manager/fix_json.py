@@ -25,8 +25,8 @@ def fix_json(file_name):
         new_data = {}
         for group_name, channels in data.items():
             new_group_name = group_name
-            # Reemplazar caracteres intermedios no deseados entre palabras
-            new_group_name = re.sub(r'[^a-zA-Z0-9/-_:]+', '_', new_group_name)
+            # Reemplazar caracteres intermedios no deseados entre palabras, conservando letras con tildes y símbolos raros
+            new_group_name = re.sub(r'[^a-zA-Z0-9ÁÉÍÓÚÜáéíóúü/-_:ñÑ]+', '_', new_group_name)
             # Verificar si el nuevo nombre es diferente del original
             if new_group_name != group_name:
                 # Si el nombre ha cambiado, agregar el canal al nuevo nombre
