@@ -31,6 +31,14 @@ def fix_json(file_name):
 
         return new_data
 
+    def update_group_title(data):
+        for group_name, channels in data.items():
+            for channel in channels:
+                if 'info' in channel:
+                    channel['info'] = channel['info'].replace(
+                        'group-title=\"{}\"'.format(channel['info'].split('group-title="')[1].split('"')[0]),
+                        'group-title=\"{}\"'.format(group_name))
+
     # Leer el JSON desde el archivo
     with open(file_name, 'r', encoding='utf-8') as file:
         data = json.load(file)
@@ -39,6 +47,9 @@ def fix_json(file_name):
     modified_data = remove_special_characters_group_names(data)
     modified_data = remove_intermediate_characters(modified_data)
     modified_data = remove_extra_underscores(modified_data)
+
+    # Actualizar el valor de group-title en los datos
+    update_group_title(modified_data)
 
     # Ordenar el diccionario por keys (group-title) alfabéticamente
     sorted_data = dict(sorted(modified_data.items()))
