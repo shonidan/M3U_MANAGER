@@ -3,32 +3,56 @@ import re
 
 def fix_json(file_name):
     def remove_special_characters_group_names(data):
-        new_data = {}  # Nuevo diccionario con las claves modificadas
+        new_data = {}
         for group_name, channels in data.items():
+            new_group_name = group_name
             # Eliminar caracteres especiales al principio del nombre del grupo
-            new_group_name = re.sub(r'^[^a-zA-Z0-9]+', '', group_name)
+            new_group_name = re.sub(r'^[^a-zA-Z0-9]+', '', new_group_name)
             # Eliminar caracteres especiales al final del nombre del grupo
             new_group_name = re.sub(r'[^a-zA-Z0-9]+$', '', new_group_name)
-            new_data[new_group_name] = channels
-
+            # Verificar si el nuevo nombre es diferente del original
+            if new_group_name != group_name:
+                # Si el nombre ha cambiado, agregar el canal al nuevo nombre
+                if new_group_name not in new_data:
+                    new_data[new_group_name] = []
+                new_data[new_group_name].extend(channels)
+            else:
+                # Si el nombre no ha cambiado, mantener el nombre y los canales intactos
+                new_data[group_name] = channels
         return new_data
 
     def remove_intermediate_characters(data):
-        new_data = {}  # Nuevo diccionario con las claves modificadas
+        new_data = {}
         for group_name, channels in data.items():
+            new_group_name = group_name
             # Reemplazar caracteres intermedios no deseados entre palabras
-            new_group_name = re.sub(r'[^a-zA-Z0-9/-_:]+', '_', group_name)
-            new_data[new_group_name] = channels
-
+            new_group_name = re.sub(r'[^a-zA-Z0-9/-_:]+', '_', new_group_name)
+            # Verificar si el nuevo nombre es diferente del original
+            if new_group_name != group_name:
+                # Si el nombre ha cambiado, agregar el canal al nuevo nombre
+                if new_group_name not in new_data:
+                    new_data[new_group_name] = []
+                new_data[new_group_name].extend(channels)
+            else:
+                # Si el nombre no ha cambiado, mantener el nombre y los canales intactos
+                new_data[group_name] = channels
         return new_data
 
     def remove_extra_underscores(data):
-        new_data = {}  # Nuevo diccionario con las claves modificadas
+        new_data = {}
         for group_name, channels in data.items():
+            new_group_name = group_name
             # Reemplazar múltiples guiones bajos con solo uno
-            new_group_name = re.sub(r'_+', '_', group_name)
-            new_data[new_group_name] = channels
-
+            new_group_name = re.sub(r'_+', '_', new_group_name)
+            # Verificar si el nuevo nombre es diferente del original
+            if new_group_name != group_name:
+                # Si el nombre ha cambiado, agregar el canal al nuevo nombre
+                if new_group_name not in new_data:
+                    new_data[new_group_name] = []
+                new_data[new_group_name].extend(channels)
+            else:
+                # Si el nombre no ha cambiado, mantener el nombre y los canales intactos
+                new_data[group_name] = channels
         return new_data
 
     def update_group_title(data):
