@@ -4,6 +4,9 @@ import regex as re
 def fix_json(file_name):
     def remove_special_characters_group_names(data):
         new_data = {}
+        # Diccionario temporal para almacenar los canales agrupados por nombre de grupo
+        temp_data = {}
+
         for group_name, channels in data.items():
             new_group_name = group_name
             # Eliminar caracteres especiales al principio del nombre del grupo
@@ -12,15 +15,25 @@ def fix_json(file_name):
             new_group_name = re.sub(r'[^\p{L}0-9]+$', '', new_group_name)
             # Mantener solo los caracteres especiales permitidos en el medio del nombre del grupo
             new_group_name = re.sub(r'[^-\w:_\/]+', '_', new_group_name)
-            # Verificar si el nuevo nombre es diferente del original
-            if new_group_name != group_name:
-                # Si el nombre ha cambiado, agregar el canal al nuevo nombre
-                if new_group_name not in new_data:
-                    new_data[new_group_name] = []
-                new_data[new_group_name].extend(channels)
+
+            # Verificar si el nuevo nombre ya existe en temp_data
+            if new_group_name in temp_data:
+                # Si el nuevo nombre existe, agregar los canales a la lista existente
+                temp_data[new_group_name].extend(channels)
             else:
-                # Si el nombre no ha cambiado, mantener el nombre y los canales intactos
+                # Si el nuevo nombre no existe, crear una nueva entrada en temp_data
+                temp_data[new_group_name] = channels
+
+        # Ahora, iterar sobre el diccionario temporal y consolidar los datos en new_data
+        for group_name, channels in temp_data.items():
+            # Verificar si el nombre del grupo ya existe en new_data
+            if group_name in new_data:
+                # Si el nombre del grupo existe, extender la lista de canales
+                new_data[group_name].extend(channels)
+            else:
+                # Si el nombre del grupo no existe, crear una nueva entrada en new_data
                 new_data[group_name] = channels
+
         return new_data
 
     def remove_extra_underscores(data):
