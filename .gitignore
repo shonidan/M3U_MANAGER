@@ -6,3 +6,4 @@ src/utils/URLS.json
 *.m3u
 *.bak
 error_urls.txt
+failed_urls.txt
