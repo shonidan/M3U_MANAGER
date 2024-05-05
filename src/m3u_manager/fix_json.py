@@ -1,5 +1,5 @@
 import json
-import re
+import regex as re
 
 def fix_json(file_name):
     def remove_special_characters_group_names(data):
@@ -7,26 +7,11 @@ def fix_json(file_name):
         for group_name, channels in data.items():
             new_group_name = group_name
             # Eliminar caracteres especiales al principio del nombre del grupo
-            new_group_name = re.sub(r'^[^a-zA-Z0-9]+', '', new_group_name)
+            new_group_name = re.sub(r'^[^\p{L}0-9]+', '', new_group_name)
             # Eliminar caracteres especiales al final del nombre del grupo
-            new_group_name = re.sub(r'[^a-zA-Z0-9]+$', '', new_group_name)
-            # Verificar si el nuevo nombre es diferente del original
-            if new_group_name != group_name:
-                # Si el nombre ha cambiado, agregar el canal al nuevo nombre
-                if new_group_name not in new_data:
-                    new_data[new_group_name] = []
-                new_data[new_group_name].extend(channels)
-            else:
-                # Si el nombre no ha cambiado, mantener el nombre y los canales intactos
-                new_data[group_name] = channels
-        return new_data
-
-    def remove_intermediate_characters(data):
-        new_data = {}
-        for group_name, channels in data.items():
-            new_group_name = group_name
-            # Reemplazar caracteres intermedios no deseados entre palabras, conservando letras con tildes y símbolos raros
-            new_group_name = re.sub(r'[^a-zA-Z0-9ÁÉÍÓÚÜáéíóúü/-_:ñÑ]+', '_', new_group_name)
+            new_group_name = re.sub(r'[^\p{L}0-9]+$', '', new_group_name)
+            # Mantener solo los caracteres especiales permitidos en el medio del nombre del grupo
+            new_group_name = re.sub(r'[^-\w:_\/]+', '_', new_group_name)
             # Verificar si el nuevo nombre es diferente del original
             if new_group_name != group_name:
                 # Si el nombre ha cambiado, agregar el canal al nuevo nombre
@@ -59,9 +44,10 @@ def fix_json(file_name):
         for group_name, channels in data.items():
             for channel in channels:
                 if 'info' in channel:
-                    channel['info'] = channel['info'].replace(
-                        'group-title=\"{}\"'.format(channel['info'].split('group-title="')[1].split('"')[0]),
-                        'group-title=\"{}\"'.format(group_name))
+                    if 'group-title="' in channel['info']:
+                        new_title = channel['info'].split('group-title="')[1].split('"')[0]
+                        channel['info'] = channel['info'].replace('group-title="{}"'.format(new_title),
+                                                                  'group-title="{}"'.format(group_name))
 
     def replace_specific_words(data, words_to_replace, replacement):
         new_data = {}
@@ -83,7 +69,6 @@ def fix_json(file_name):
 
     # Modificar las claves del diccionario
     modified_data = remove_special_characters_group_names(data)
-    modified_data = remove_intermediate_characters(modified_data)
     modified_data = remove_extra_underscores(modified_data)
 
     # Reemplazar palabras específicas en group_name

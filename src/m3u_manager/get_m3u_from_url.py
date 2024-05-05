@@ -56,8 +56,13 @@ def get_m3u_from_url(url):
                     channel_names_and_url.append((channel_info, line.strip()))
         elif response.status_code != 200:
             logging.info("Non-200 status code received. Processing URL...")
+
             processed_content = process_url(url)
-            if processed_content:
+            if processed_content is None:  # Verifica si la URL falló
+                # Guardar la URL que falló en un archivo
+                with open("failed_urls.txt", "a") as f:
+                    f.write(url + "\n")
+            else:
                 content += processed_content  # Agrega el contenido procesado al contenido original
                 content = content.splitlines()  # Divide el contenido en líneas
 
@@ -77,5 +82,4 @@ def get_m3u_from_url(url):
 
     except requests.exceptions.RequestException as e:
         print("Error making request:", e)
-
-    return content  # Devuelve el contenido al final de la función
+        return None  # Devuelve None en caso de error en la solicitud

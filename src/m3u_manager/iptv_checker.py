@@ -3,6 +3,7 @@ import subprocess
 from PIL import Image
 import pytesseract
 import json
+from urllib.parse import urlparse
 
 # Función para realizar OCR en una imagen y determinar si contiene la palabra "error"
 def ocr(image_path):
@@ -50,13 +51,62 @@ def teststream_json(json_file):
     with open(json_file, encoding='utf-8') as f:
         data = json.load(f)
 
-    # Iterar sobre cada grupo en el JSON
+    valid_groups = {}  # Diccionario para almacenar grupos con al menos una URL válida
+
     for group_name, channels in data.items():
+        online_urls = {}  # Diccionario para almacenar URLs en línea
+        offline_urls = {}  # Diccionario para almacenar URLs sin conexión
+        failed_server = None  # Variable para almacenar el dominio del servidor de la última URL que falló
+
+        # Verificar cada canal en el grupo
         for channel in channels:
-            if not teststream(channel['url']):  # Si la transmisión no está en línea
-                channels.remove(channel)  # Eliminar la entrada del canal
+            url = channel['url']
+            is_online = teststream(url)  # Verificar si la URL está en línea
+
+            # Si la URL está en línea
+            if is_online:
+                parsed_url = urlparse(url)
+                server = parsed_url.netloc
+
+                # Verificar si la URL pertenece al mismo servidor que ya está en línea
+                if any(urlparse(online_url).netloc == server for online_url in online_urls):
+                    online_urls[url] = channel
+                    continue
+
+                online_urls[url] = channel
+                failed_server = None  # Reiniciar la variable failed_server
+            else:
+                parsed_url = urlparse(url)
+                server = parsed_url.netloc
+                if failed_server and server == failed_server:
+                    offline_urls[url] = channel
+                else:
+                    failed_server = server
+
+        # Si hay al menos una URL en línea, guardar el grupo en el diccionario de grupos válidos
+        if online_urls:
+            valid_groups[group_name] = online_urls
 
     # Guardar el JSON resultante
     output_file = os.path.splitext(json_file)[0] + '_output.json'
     with open(output_file, 'w', encoding='utf-8') as f:
-        json.dump(data, f, indent=4)
+        json.dump(valid_groups, f, indent=4)
+
+    # Convertir el JSON resultante a un archivo M3U
+    json_to_m3u(output_file)
+
+def json_to_m3u(json_file):
+    json_name = json_file.replace(".json", "")
+    with open(json_file, 'r', encoding='utf-8') as json_data:
+        data = json.load(json_data)
+
+    with open(f"{json_name}.m3u", 'w', encoding='utf-8') as f:
+        f.write("#EXTM3U\n\n")  # Write the m3u file header
+        for channel_group, channels_info in data.items():
+            for channel_data in channels_info:
+                info = channel_data.get("info", "")
+                url = channel_data.get("url", "")
+                if info and url:  # Check if both values exist
+                    f.write(f"{info}\n")  # Write channel information
+                    f.write(f"{url}\n")  # Write the URL
+                    f.write("\n")  # Add a newline after each URL
